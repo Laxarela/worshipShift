@@ -1,5 +1,10 @@
 product-info {
   display: block;
+  background-color: red;
+}
+
+.shopify-section section{
+  background-color: black;
 }
 
 .product {
