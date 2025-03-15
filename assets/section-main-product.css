@@ -7,6 +7,21 @@ product-info {
   margin: 0;
 }
 
+/* added styling */
+.product__title h1{
+color:#FFFFFF;
+  font-size: 28px;
+  font-weight: 400;
+}
+.product__description p {
+  color:#FFFFFF;
+  font-size: 14px;
+  font-weight: 400;
+  line-height:14px;
+  letter-spacing:0;
+}
+
+
 .product.grid {
   gap: 0;
 }
