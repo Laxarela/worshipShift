@@ -48,6 +48,15 @@ padding-bottom:16px}
     background: linear-gradient(45deg, #8B3FC6 0.1%, #00BCD4 99.9%);
 }
 
+/*tags section  */
+.tags-section{
+  display:flex;
+  gap:8px;
+}
+@media only screen and (max-width: 550px){
+  flex-wrap: wrap;
+}
+
 .product.grid {
   gap: 0;
 }
