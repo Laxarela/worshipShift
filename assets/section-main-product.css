@@ -32,6 +32,12 @@ color:#FFFFFF;
   border-bottom:0.5px solid #4D4D4D;
 padding-bottom:16px}
 
+.options{
+  display: flex;
+    gap:10px;
+  
+}
+
 .product.grid {
   gap: 0;
 }
