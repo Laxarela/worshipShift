@@ -91,6 +91,20 @@ padding-bottom:16px}
   text-align: center;
 }
 
+.product-form__buttons{
+  display:none;
+}
+
+.button.free-trial {
+  background-color: #8CC63F;
+  border-radius:48px;
+}
+
+.button.add-to-cart {
+  background-color: background: linear-gradient(45deg, #2193B0 0.1%, #4AB7D1 54.49%, #6DD5ED 99.9%);
+}
+
+
 .product.grid {
   gap: 0;
 }
