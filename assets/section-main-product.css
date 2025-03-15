@@ -21,6 +21,16 @@ color:#FFFFFF;
   letter-spacing:0;
 }
 
+.section h3, label,button{
+  font-size:16px;
+  font-weight:400;
+  /* line-height:24px; */
+  letter-spacing:0.5px;
+  color:#FFFFFF;
+}
+.section{
+  border-bottom:0.5px solid #4D4D4D;
+padding-bottom:16px}
 
 .product.grid {
   gap: 0;
