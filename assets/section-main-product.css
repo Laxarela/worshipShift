@@ -34,8 +34,18 @@ padding-bottom:16px}
 
 .options{
   display: flex;
-    gap:10px;
-  
+    gap:10px;  
+}
+
+.option-button{
+  width:69px;
+  height:40px;
+  border:none;
+  background-color:#4D4D4D;
+  cursor:pointer;
+}
+.option-button.active{
+    background: linear-gradient(45deg, #8B3FC6 0.1%, #00BCD4 99.9%);
 }
 
 .product.grid {
