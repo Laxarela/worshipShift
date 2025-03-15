@@ -1,14 +1,127 @@
 .footer {
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
+  background-color:#000000;
 }
+/* new footer styling */
+
+.site-footer {
+  background-color: #f8f8f8;
+  padding: 20px;
+  text-align: center;
+  max-width:1920px;
+  width:100%;
+  margin : 0 auto;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(5, 0.5fr);
+}
+
+  .col-1 { max-width:224px; }
+.col-2 { max-width:162px; }
+.col-3 { max-width:126px }
+.col-4 { max-width: 180px; }
+.col-5 { max-width:480px }
+
+@media only screen and (max-width:750px){
+  .footer-content{
+     display: grid; 
+    align-self: center;
+  grid-template-columns: 1fr 1fr ; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    "col-1 col-1 . . ."
+    "col-2 col-3 . . ."
+    "col-4 . . . ."
+    "col-5 col-5 . . ."; 
+  }
+
+  .col-1 { grid-area: col-1; }
+.col-2 { grid-area: col-2; }
+.col-3 { grid-area: col-3; }
+.col-4 { grid-area: col-4; }
+.col-5 { grid-area: col-5; }
+}
+
+.footer-section {
+  margin: 10px;
+  text-align: left;
+  width:fit-content;
+}
+
+.footer-section h2, .footer-section p {
+  font-size: 18px;
+  color: #FFFFFF;
+  font-weight:300;
+  font-size:18px;
+  line-height:24px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin: 5px 0;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-weight:300;
+  font-size:18px;
+  line-height:24px;
+}
+.footer-section form input {
+  padding: 10px;
+  margin-bottom: 10px;
+  max-width:392px;
+  width:100%;
+  height:48px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  border: 0.5px solid #FFFFFF;
+  border-radius:28px;
+}
+.submit_email{
+  display : flex;
+  gap:8px;
+}
+
+.footer-section form button {
+  padding: 8px;
+  max-width:80px;
+  width:100%;
+  height:48px;
+  background-color: transparent;
+  color: #fff;
+  border: 0.5px solid #FFFFFF;
+  cursor: pointer;
+  border-radius: 48px;
+  font-size: 16px;
+  font-weight:500;
+  line-height:24px;
+}
+
+.footer-bottom {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+} 
+
+/*end of footer styling  */
 
 .footer:not(.color-scheme-1) {
   border-top: none;
 }
 
+/*removing the daqwn footer top content  */
 .footer__content-top {
   padding-bottom: 5rem;
   display: block;
+  display:none;
 }
 
 @media screen and (max-width: 749px) {
@@ -39,10 +152,11 @@
     margin-bottom: 0;
   }
 }
-
+/*removing the dawn bootom footer  */
 .footer__content-bottom {
   border-top: solid 0.1rem rgba(var(--color-foreground), 0.08);
   padding-top: 3rem;
+  display:none;
 }
 
 .footer__content-bottom:only-child {
