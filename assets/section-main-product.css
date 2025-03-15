@@ -56,6 +56,16 @@ padding-bottom:16px}
 @media only screen and (max-width: 550px){
   flex-wrap: wrap;
 }
+.tags-section button{
+  font-size:14px;
+  font-weight:500;
+  padding:8px;
+  border:none;
+  border-radius:8px;
+  background-color:#212124;
+  white-space:nowrap;
+  
+}
 
 .product.grid {
   gap: 0;
