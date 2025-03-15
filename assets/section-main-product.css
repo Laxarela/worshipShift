@@ -13,6 +13,11 @@ color:#FFFFFF;
   font-size: 28px;
   font-weight: 400;
 }
+
+
+#price-template--24450913239224__main{
+  display:none;
+}
 .product__description p {
   color:#FFFFFF;
   font-size: 14px;
