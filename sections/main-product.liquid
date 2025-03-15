@@ -1,6 +1,6 @@
 <product-info
   id="MainProduct-{{ section.id }}"
-  class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
+  class="section-{{ section.id }}-padding"
   data-section="{{ section.id }}"
   data-product-id="{{ product.id }}"
   data-update-url="true"
@@ -91,10 +91,12 @@
                 {% render block %}
               {%- when 'text' -%}
                 <p
-                  class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+                  class="product__text  inline-richtext{% if block.settings.text_style == 'capitalize' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
                   {{ block.shopify_attributes }}
                 >
-                  {{- block.settings.text -}}
+                  Created by :
+                  <span>{{- block.settings.text -}}</span>
+                  <!-- Created by: {{ product.vendor }} -->
                 </p>
               {%- when 'title' -%}
                 <div class="product__title" {{ block.shopify_attributes }}>
@@ -105,6 +107,60 @@
                     </h2>
                   </a>
                 </div>
+
+              {%- when 'description' -%}
+                {%- if product.description != blank -%}
+                  <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
+                    {{ product.description }}
+                  </div>
+                {%- endif -%}
+
+                {% comment %}
+                    adding the metafields values and creating the video formation based on desing.
+                  First of all we assigin the values into categories then we buid the components based on our values
+                {% endcomment %}
+
+                {%- assign video_options = product.metafields.custom.video_formation | parse_json -%}
+
+                {%- assign resolutions = 'HD,4K,SD' | split: ',' -%}
+                {%- assign formats = 'MP4,WMV' | split: ',' -%}
+                {%- assign screen_widths = 'Single Wide,Triple Wide' | split: ',' -%}
+
+                <div class="video-formation">
+                  <!-- Resolution Section -->
+                  <div class="section">
+                    <h3>Resolution</h3>
+                    <div class="options">
+                      {%- for resolution in resolutions -%}
+                        <button class="option-button {% if forloop.first %}active{% endif %}">{{ resolution }}</button>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+
+                  <!-- Format Section -->
+                  <div class="section">
+                    <h3>Format</h3>
+                    <div class="options">
+                      {%- for format in formats -%}
+                        <button class="option-button  {% if forloop.first %}active{% endif %}">{{ format }}</button>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+
+                  <!-- Screen Width Section -->
+                  <div class="section">
+                    <h3>Screen Width</h3>
+                    <div class="options">
+                      {%- for width in screen_widths -%}
+                        <label>
+                          <input type="radio" name="screen_width" value="{{ width }}">
+                          {{ width }}
+                        </label>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                </div>
+
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
                   {%- render 'price',
@@ -191,12 +247,7 @@
                     {%- endif -%}
                   {%- endif -%}
                 </p>
-              {%- when 'description' -%}
-                {%- if product.description != blank -%}
-                  <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
-                    {{ product.description }}
-                  </div>
-                {%- endif -%}
+
               {%- when 'sku' -%}
                 <p
                   class="product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}"
@@ -471,6 +522,27 @@
                   section_id: section.id,
                   show_pickup_availability: true
                 -%}
+
+                {% comment %}
+                  button add to cart
+                {% endcomment %}
+                <div class="custom-buttons">
+                  <a href="/link-to-free-trial" class="button free-trial">Start Free Trial</a>
+                  <form action="/cart/add" method="post">
+                    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                    <button type="submit" class="button add-to-cart">Add To Cart - $29</button>
+                  </form>
+                </div>
+
+                {% comment %}
+                  adding thr tags elemets components by adding an # before each tag
+                {% endcomment %}
+
+                <div class="tags-section">
+                  {%- for tag in product.tags -%}
+                    <button class="tags">#{{ tag }}</button>
+                  {%- endfor -%}
+                </div>
               {%- when 'rating' -%}
                 {%- if product.metafields.reviews.rating.value != blank -%}
                   <div class="rating-wrapper">
@@ -670,6 +742,30 @@
       </div>
     </div>
 
+    <!-- trying to check the refrence metafield -->
+    {% assign bundleProducts = product.metafields.custom.bundleProduct.value %}
+    {% if bundleProducts %}
+      <script>
+        const bundleProducts = [
+          {% for productRef in bundleProducts %}
+            {
+              id: "{{ productRef.id }}",
+              title: "{{ productRef.title | escape }}",
+              handle: "{{ productRef.handle }}",
+              featuredImage: "{{ productRef.featuredImage.url | default: '' }}",
+              price: "{{ productRef.priceRange.minVariantPrice.amount }}"
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ];
+        console.log("Bundle Products:", bundleProducts);
+      </script>
+    {% else %}
+      <script>
+        console.log("No bundle products found.");
+      </script>
+    {% endif %}
+    <!-- trying to check the refrence metafield -->
+
     {% render 'product-media-modal', variant_images: variant_images %}
 
     {% assign popups = section.blocks | where: 'type', 'popup' %}
@@ -721,6 +817,23 @@
     <script type="application/ld+json">
       {{ product | structured_data }}
     </script>
+
+    <script>
+          const bundleProduct = {{ product.metafields.custom.bundleProduct | json }};
+      console.log("Raw Bundle Product Metafield:", bundleProduct);
+    </script>
+
+    <script>
+      // Debugging: Check if the metafield exists and has data
+      {% if product.metafields.custom.bundleProduct %}
+        const bundleProduct = {{ product.metafields.custom.bundleProduct | json }};
+        console.log("Bundle Product Metafield:", bundleProduct);
+      {% else %}
+        console.log("Bundle Product Metafield is empty or does not exist.");
+      {% endif %}
+    </script>
+
+    {{ 'activeButton.js' | asset_url | script_tag }}
   </div>
 </product-info>
 
@@ -768,6 +881,11 @@
     {
       "type": "title",
       "name": "t:sections.main-product.blocks.title.name",
+      "limit": 1
+    },
+        {
+      "type": "description",
+      "name": "t:sections.main-product.blocks.description.name",
       "limit": 1
     },
     {
@@ -915,11 +1033,7 @@
         }
       ]
     },
-    {
-      "type": "description",
-      "name": "t:sections.main-product.blocks.description.name",
-      "limit": 1
-    },
+
     {
       "type": "share",
       "name": "t:sections.main-product.blocks.share.name",
