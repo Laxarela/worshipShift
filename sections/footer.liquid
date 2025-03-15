@@ -28,6 +28,64 @@
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+  <!-- start of new footer -->
+  <div class="footer-content">
+    <div class="footer-section footer-logo col-1 ">
+      <img src="{{ 'worshipShift_footer-logo.png' | asset_url }}" alt="Footer Image" class="footer-image">
+    </div>
+    <div class="footer-section col-2">
+      <ul>
+        <li><a href="/pages/blog">About</a></li>
+        <li><a href="/pages/blog">Blog</a></li>
+        <li><a href="/pages/terms">Terms</a></li>
+        <li><a href="/pages/help-contact">Help / Contact Us</a></li>
+        <li><a href="/pages/privacy">Privacy</a></li>
+        <li><a href="/pages/ccpa-do-not-sell">CCPA - Do Not Sell</a></li>
+        <li><a href="/pages/my-personal-information">My Personal Information</a></li>
+        <li><a href="/pages/california-ccpa-notice">California - CCPA Notice</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section col-3">
+      <ul>
+        <li><a href="/collections/motions">Collections</a></li>
+        <li><a href="/collections/motions">Motions</a></li>
+        <li><a href="/collections/stills">Stills</a></li>
+        <li><a href="/collections/mini-movies">Mini Movies</a></li>
+        <li><a href="/collections/countdowns">Countdowns</a></li>
+        <li><a href="/collections/social-media">Social Media</a></li>
+        <li><a href="/collections/siemon-titles">Siemon Titles</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section col-4">
+      <ul>
+        <li><a href="/collections/new-releases">Membershipss</a></li>
+        <li><a href="/collections/new-releases">New Releases</a></li>
+        <li><a href="/collections/christmas-ideas">Christmas Ideas</a></li>
+        <li><a href="/collections/easter-ideas">Easter Ideas</a></li>
+        <li><a href="#/"></a></li>
+        <li><a href="/collections/fathers-day">Father’s </a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section col-5">
+      <h2>Newsletter</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua.
+      </p>
+      <form action="#" method="post" class="submit_email">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>Copyright © 2020-20 Shift Worship® All Rights Reserved</p>
+  </div>
+  <!-- end of new footer -->
   {%- liquid
     assign has_social_icons = true
     if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
