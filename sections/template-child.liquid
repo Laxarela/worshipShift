@@ -115,7 +115,16 @@
               {%- when 'description' -%}
                 {%- if product.description != blank -%}
                   <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
-                    {{ product.description }}
+                    <p>
+                      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of
+                      classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin
+                      professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words,
+                      consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical
+                      literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33
+                      of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC.
+                      This book is a treatise on the theory of ethics, very popular during the Renaissance. The first
+                      line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+                    </p>
                   </div>
                 {%- endif -%}
 
@@ -123,85 +132,6 @@
                     adding the metafields values and creating the video formation based on desing.
                   First of all we assigin the values into categories then we buid the components based on our values
                 {% endcomment %}
-
-                {%- assign video_options = product.metafields.custom.video_formation | parse_json -%}
-
-                {%- assign resolutions = 'HD,4K,SD' | split: ',' -%}
-                {%- assign formats = 'MP4,WMV' | split: ',' -%}
-                {%- assign screen_widths = 'Single Wide,Triple Wide' | split: ',' -%}
-
-                <div class="video-formation">
-                  <!-- Resolution Section -->
-                  <div class="section">
-                    <h3>Resolution</h3>
-                    <div class="options">
-                      {%- for resolution in resolutions -%}
-                        <button class="option-button {% if forloop.first %}active{% endif %}">{{ resolution }}</button>
-                      {%- endfor -%}
-                    </div>
-                  </div>
-
-                  <!-- Format Section -->
-                  <div class="section">
-                    <h3>Format</h3>
-                    <div class="options">
-                      {%- for format in formats -%}
-                        <button class="option-button  {% if forloop.first %}active{% endif %}">{{ format }}</button>
-                      {%- endfor -%}
-                    </div>
-                  </div>
-
-                  <!-- Screen Width Section -->
-                  <!-- Screen Width Section (Visible for All Users) -->
-                  <div class="section">
-                    <h3>Screen Width</h3>
-                    <div class="options">
-                      {%- for width in screen_widths -%}
-                        <label>
-                          <input type="radio" name="screen_width" value="{{ width }}">
-                          {{ width }}
-                        </label>
-                      {%- endfor -%}
-                    </div>
-                  </div>
-
-                  <!-- PRO User Section: Dropbox & Download Buttons -->
-                  {% if customer %}
-                    {% assign customer_role = customer.metafields.custom.customer_login %}
-                    {% assign last_download = customer.metafields.custom.last_download %}
-
-                    <div class="pro-download-section">
-                      <button class="download-button">
-                        <img src="{{ 'donwload_button.png' | asset_url }}" alt="Download" width="40" height="40">
-                      </button>
-
-                      {% if customer_role == 'pro' %}
-                        <!-- PRO user: Dropbox button should be blue, no restriction text -->
-                        <button class="dropbox-button pro">
-                          <img src="{{ 'dropbox_blue.png' | asset_url }}" alt="Dropbox" width="40" height="40">
-                        </button>
-
-                      {% elsif customer_role == 'mode' %}
-                        <!-- MODE user: Dropbox button greyed out, restriction text shown -->
-                        <button class="dropbox-button disabled">
-                          <img src="{{ 'dropbox.png' | asset_url }}" alt="Dropbox" width="40" height="40">
-                        </button>
-                        <p class="pro-access">
-                          <img src="{{ 'lockKey.png' | asset_url }}" alt="key" width="10" height="10"> Dropbox Available
-                          to PRO Members
-                        </p>
-                      {% endif %}
-
-                      {% if last_download %}
-                        <p class="download-info">
-                          You last downloaded this media on {{ last_download | date: '%b. %d, %Y' }}.
-                        </p>
-                      {% else %}
-                        <p class="download-info">No downloads yet.</p>
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                </div>
 
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
@@ -795,39 +725,6 @@
             {{ 'products.product.view_full_details' | t }}
             {{- 'icon-arrow.svg' | inline_asset_content -}}
           </a>
-
-          <!-- adding collection part -->
-          {% if product.metafields.custom.bundleproduct.value %}
-            {% assign parent_product = product.metafields.custom.bundleproduct.value %}
-
-            <div class="bundle-collection">
-              <h2>Collection</h2>
-              {% for parent_product in product.metafields.custom.bundleproduct.value %}
-                <a href="{{ parent_product.url }}" id="collectionImage">
-                  {% if parent_product.featured_image %}
-                    <img
-                      src="{{ parent_product.featured_image.src | img_url: 'medium' }}"
-                      width="200px"
-                      height="150px"
-                      alt="{{ parent_product.title }}"
-                      class="collection-thumbnail"
-                    >
-                  {% else %}
-                    <img
-                      src="{{ 'collection.png' | asset_url }}"
-                      alt="Collection Image"
-                      class="collection-thumbnail"
-                      width="200px"
-                      height="150px"
-                    >
-                  {% endif %}
-                </a>
-              {% endfor -%}
-              }
-            </div>
-          {% endif %}
-
-          <!-- end of adding collection part -->
         </section>
       </div>
     </div>
@@ -836,27 +733,29 @@
 
     <!-- Referenced Products Section -->
     <!--
-      <div class="referenced-products" id="referencedProducts" style="display: none;">
-        <h2>Bundle Products</h2>
-        <ul>
-          {% for bundle_product in product.metafields.custom.bundleproduct.value %}
-            <li class="bundle-item">
-              <a href="{{ bundle_product.url }}">
-                {% if bundle_product.featured_image %}
-                  <img
-                    src="{{ bundle_product.featured_image.src | img_url: 'small' }}"
-                    alt="{{ bundle_product.title }}"
-                  >
-                {% else %}
-                  <img src="{{ 'default-product.png' | asset_url }}" alt="Default Image">
-                {% endif %}
-                <p>{{ bundle_product.title }}</p>
-                <p>Price: {{ bundle_product.price | money }}</p>
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      {% if product.metafields.custom.bundleproduct.value %}
+        <div class="referenced-products" id="referencedProducts">
+          <h2>Bundle Products</h2>
+          <ul>
+            {% for bundle_product in product.metafields.custom.bundleproduct.value %}
+              <li class="bundle-item">
+                <a href="{{ bundle_product.url }}">
+                  {% if bundle_product.featured_image %}
+                    <img
+                      src="{{ bundle_product.featured_image.src | img_url: 'small' }}"
+                      alt="{{ bundle_product.title }}"
+                    >
+                  {% else %}
+                    <img src="{{ 'default-product.png' | asset_url }}" alt="Default Image">
+                  {% endif %}
+                  <p>{{ bundle_product.title }}</p>
+                  <p>Price: {{ bundle_product.price | money }}</p>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     -->
 
     <!-- end of onclick test -->
@@ -867,18 +766,6 @@
 
     {% render 'product-media-modal', variant_images: variant_images %}
 
-    <!-- rendering recently viewd -->
-    {% render 'recently-viewed' %}
-
-    <!-- render  related products -->
-    <!--
-      {% render 'related-products',
-        section: section,
-        recommendations: recommendations,
-        product: product,
-        settings: settings
-      %}
-    -->
     {% assign popups = section.blocks | where: 'type', 'popup' %}
     {%- for block in popups -%}
       <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
@@ -931,8 +818,7 @@
 
     {% if product.metafields.custom.bundleproduct.value %}
       <script>
-        const bundleProduct = {{ product.metafields.custom.bundleproduct.value | json}};
-
+        const bundleProduct = {{ product.metafields.custom.bundleproduct.value | json }};
         console.log("Bundle Product Metafield:", bundleProduct);
       </script>
     {% else %}
@@ -942,6 +828,8 @@
     {{ 'activeButton.js' | asset_url | script_tag }}
   </div>
 </product-info>
+<!-- collection page -->
+{% render 'collection-page' %}
 
 {% schema %}
 {
@@ -992,7 +880,16 @@
         {
       "type": "description",
       "name": "t:sections.main-product.blocks.description.name",
-      "limit": 1
+      "limit": 1,
+"settings": [
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "Description Text",
+      "default": "This is the default product description."
+    }
+  ]
+
     },
     {
       "type": "price",

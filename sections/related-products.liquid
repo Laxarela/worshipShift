@@ -18,8 +18,10 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+  .card__information{
+    display:none;
+  }
 {%- endstyle -%}
-
 <div class="color-{{ section.settings.color_scheme }} gradient">
   <product-recommendations
     class="related-products page-width section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
@@ -28,8 +30,31 @@
     data-product-id="{{ product.id }}"
   >
     {% if recommendations.performed and recommendations.products_count > 0 %}
-      <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
-        {{ section.settings.heading }}
+      <!--
+        <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
+          {{ section.settings.heading }}
+        </h2>
+      -->
+      <!-- adding the title for collection -->
+      <h2 class="title inline-richtext h2 scroll-trigger animate--slide-in">
+        Related Collection <span>|</span> View all
+        <a href="https://lela-test.myshopify.com/products/">
+          <svg
+            fill="#00000"
+            width="20px"
+            height="18px"
+            viewBox="0 0 0.9 0.9"
+            id="up"
+            data-name="Flat Color"
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon flat-color"
+            version="1.1"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)"
+          >
+            <path id="primary" d="m0.739 0.348 -0.263 -0.263a0.037 0.037 0 0 0 -0.053 0l-0.263 0.263a0.037 0.037 0 0 0 0.053 0.053L0.412 0.203V0.787a0.037 0.037 0 0 0 0.075 0V0.203l0.198 0.199a0.037 0.037 0 0 0 0.053 0 0.037 0.037 0 0 0 0 -0.053" style="fill: white;"></path>
+          </svg>
+        </a>
       </h2>
       <ul
         class="grid product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"

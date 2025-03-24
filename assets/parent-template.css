@@ -1,0 +1,34 @@
+
+    .section-container{
+        margin-top: 5rem;
+        display: flex;
+        flex-direction: column;
+       justify-content: center;
+      align-items: center;
+       }
+   .section-container h1, tags-title {
+          color:#FFFFFF;
+           font-weight: 300;
+            font-size: 32px;
+             line-height: 24px;
+             }
+
+             .scroll-to-tags {
+         display: flex;
+         flex-direction: row;
+        gap:15px;
+                        }
+            .scroll-to-tags p {
+              background-color:#212124;
+                          padding:8px 15px;
+              cursor:pointer;
+            }
+           .scroll-to-tags p:hover {
+        background: linear-gradient(45deg, #8b3fc6 0.1%, #00bcd4 99.9%);
+      }
+                        .scroll-to-tags > * {
+                            font-weight: 300;
+                            font-size: 22px;
+                            line-height: 28px;
+                            color: #FFFFFF;
+                        }

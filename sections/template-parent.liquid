@@ -10,6 +10,7 @@
   {% endif %}
 >
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'parent-template.css' | asset_url | stylesheet_tag }}
   {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
@@ -795,69 +796,72 @@
             {{ 'products.product.view_full_details' | t }}
             {{- 'icon-arrow.svg' | inline_asset_content -}}
           </a>
-
-          <!-- adding collection part -->
-          {% if product.metafields.custom.bundleproduct.value %}
-            {% assign parent_product = product.metafields.custom.bundleproduct.value %}
-
-            <div class="bundle-collection">
-              <h2>Collection</h2>
-              {% for parent_product in product.metafields.custom.bundleproduct.value %}
-                <a href="{{ parent_product.url }}" id="collectionImage">
-                  {% if parent_product.featured_image %}
-                    <img
-                      src="{{ parent_product.featured_image.src | img_url: 'medium' }}"
-                      width="200px"
-                      height="150px"
-                      alt="{{ parent_product.title }}"
-                      class="collection-thumbnail"
-                    >
-                  {% else %}
-                    <img
-                      src="{{ 'collection.png' | asset_url }}"
-                      alt="Collection Image"
-                      class="collection-thumbnail"
-                      width="200px"
-                      height="150px"
-                    >
-                  {% endif %}
-                </a>
-              {% endfor -%}
-              }
-            </div>
-          {% endif %}
-
-          <!-- end of adding collection part -->
         </section>
       </div>
     </div>
-
+    <!-- includd in the header -->
     <!-- on click test -->
-
     <!-- Referenced Products Section -->
-    <!--
-      <div class="referenced-products" id="referencedProducts" style="display: none;">
-        <h2>Bundle Products</h2>
-        <ul>
-          {% for bundle_product in product.metafields.custom.bundleproduct.value %}
-            <li class="bundle-item">
-              <a href="{{ bundle_product.url }}">
-                {% if bundle_product.featured_image %}
-                  <img
-                    src="{{ bundle_product.featured_image.src | img_url: 'small' }}"
-                    alt="{{ bundle_product.title }}"
-                  >
-                {% else %}
-                  <img src="{{ 'default-product.png' | asset_url }}" alt="Default Image">
-                {% endif %}
-                <p>{{ bundle_product.title }}</p>
-                <p>Price: {{ bundle_product.price | money }}</p>
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
+    {% if product.metafields.custom.bundleproduct.value %}
+      <div class="referenced-products" id="referencedProducts">
+        <!-- assign empty array liquid does not recognise the empty object -->
+
+        {% assign grouped_products = '' %}
+
+        <!-- Collect all unique product types -->
+        {% for bundle_product in product.metafields.custom.bundleproduct.value %}
+          {% assign type = bundle_product.type | default: 'Other' %}
+
+          {% unless grouped_products contains type %}
+            {% assign grouped_products = grouped_products | append: ',' | append: type %}
+          {% endunless %}
+        {% endfor %}
+
+        {% assign grouped_products = grouped_products | remove_first: ',' | split: ',' %}
+
+        <!-- Render the scroll-to-tags section dynamically -->
+        <section class="section-container">
+          <h1 class="tags-title">Included in the collection</h1>
+          <div class="scroll-to-tags">
+            {% for type in grouped_products %}
+              <p onclick="scrollToSection('{{ type | handleize }}')">
+                {{ type }}
+                <img src="{{ 'arrow-down.png' | asset_url }}" alt="array-image" width="15px" height="15px">
+              </p>
+            {% endfor %}
+          </div>
+        </section>
+
+        <!-- Display grouped bundle products -->
+        {% for type in grouped_products %}
+          <h3 id="{{ type | handleize }}">{{ type }}</h3>
+          <ul>
+            {% for bundle_product in product.metafields.custom.bundleproduct.value %}
+              {% assign productType = bundle_product.type | default: 'Other' %}
+
+              {% if productType == type %}
+                <li class="bundle-item">
+                  <a href="{{ bundle_product.url }}">
+                    {% if bundle_product.featured_image %}
+                      <img
+                        src="{{ bundle_product.featured_image.src | img_url: 'small' }}"
+                        width="400px"
+                        height="200px"
+                        alt="{{ bundle_product.title }}"
+                      >
+                    {% else %}
+                      <img src="{{ 'collection.png' | asset_url }}" alt="Default Image" width="300px" height="200px">
+                    {% endif %}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endfor %}
       </div>
-    -->
+    {% else %}
+      <p>No bundle products found.</p>
+    {% endif %}
 
     <!-- end of onclick test -->
     <!-- render js for the on click button -->
@@ -867,18 +871,6 @@
 
     {% render 'product-media-modal', variant_images: variant_images %}
 
-    <!-- rendering recently viewd -->
-    {% render 'recently-viewed' %}
-
-    <!-- render  related products -->
-    <!--
-      {% render 'related-products',
-        section: section,
-        recommendations: recommendations,
-        product: product,
-        settings: settings
-      %}
-    -->
     {% assign popups = section.blocks | where: 'type', 'popup' %}
     {%- for block in popups -%}
       <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
@@ -928,12 +920,25 @@
     <script type="application/ld+json">
       {{ product | structured_data }}
     </script>
+    <!-- function to scroll into element -->
+    <script>
+      function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    </script>
 
     {% if product.metafields.custom.bundleproduct.value %}
       <script>
-        const bundleProduct = {{ product.metafields.custom.bundleproduct.value | json}};
+        const bundleProducts = {{ product.metafields.custom.bundleproduct.value | json }};
 
-        console.log("Bundle Product Metafield:", bundleProduct);
+        bundleProducts.forEach(bundleProduct => {
+          console.log("type:", bundleProduct.type);
+        });
+
+        console.log("Bundle Product Metafield:", bundleProducts);
       </script>
     {% else %}
       <p>No bundle products found.</p>

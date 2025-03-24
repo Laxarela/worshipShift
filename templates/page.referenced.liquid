@@ -1,0 +1,38 @@
+{% comment %}
+  Template: page.referenced.liquid
+  This template is for displaying products referenced by the `bundleproduct` metafield.
+{% endcomment %}
+
+{% comment %}
+  Fetch the product handle from the query parameter.
+{% endcomment %}
+{% assign product_handle = request.query_params.product %}
+{% assign main_product = all_products[product_handle] %}
+
+{% comment %}
+  Fetch the referenced products from the `bundleproduct` metafield.
+{% endcomment %}
+{% assign referenced_products = main_product.metafields.custom.bundleproduct.value %}
+
+<div class="referenced-products">
+  <h1>Products in This Collection</h1>
+  <div class="product-grid">
+    {% if referenced_products %}
+      {% for product_handle in referenced_products %}
+        {% assign referenced_product = all_products[product_handle] %}
+        <div class="product-item">
+          <a href="{{ referenced_product.url }}">
+            <img
+              src="{{ referenced_product.featured_image | img_url: 'medium' }}" width="380px" height="380px
+              alt="{{ referenced_product.title }}"
+              class="product-image"
+            >
+            <h3>{{ referenced_product.title }}</h3>
+          </a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No products found in this collection.</p>
+    {% endif %}
+  </div>
+</div>

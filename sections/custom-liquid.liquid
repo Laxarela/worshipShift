@@ -1,4 +1,16 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+
 {%- style -%}
+      .shopify-section.section,.shopify-section.section .page-width{
+        background-color:#161618;
+    }
+  .c-product h3.c-product__title a{
+      text-decoration:none;
+      color:#FFFFFF ;
+    display:none;
+  }
   .section-{{ section.id }}-padding {
     padding-top: calc({{ section.settings.padding_top }}px * 0.75);
     padding-bottom: calc({{ section.settings.padding_bottom }}px  * 0.75);
@@ -11,7 +23,7 @@
     }
   }
 {%- endstyle -%}
-<div class="color-{{ section.settings.color_scheme }} gradient">
+<div class="color-{{ section.settings.color_scheme }} gradient page-width recently-viewed">
   <div class="section-{{ section.id }}-padding">
     {{ section.settings.custom_liquid }}
   </div>

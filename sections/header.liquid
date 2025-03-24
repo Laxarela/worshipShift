@@ -17,6 +17,13 @@
     justify-self: start;
     margin-left: -1.2rem;
   }
+  .header-wrapper{
+    background-color:#161618;
+  }
+  .header__heading-logo-wrapper img{
+    width:234px;
+    height: 43px;
+}
 
   {%- if section.settings.sticky_header_type == 'reduce-logo-size' -%}
     .scrolled-past-header .header__heading-logo-wrapper {
@@ -33,7 +40,8 @@
   {%- endif -%}
 
   .menu-drawer-container {
-    display: flex;
+    display: flex;;
+   
   }
 
   .list-menu {
@@ -55,13 +63,43 @@
     display: flex;
     align-items: center;
     line-height: calc(1 + 0.3 / var(--font-body-scale));
+    font-size: 20px;
+    font-weight:400;
+    line-height:17px;
+    color:#FFFFFF;
   }
+   .header__menu-item:hover{
+  color:#FFFFFF;
+  }
+    .header__active-menu-item{
+    color:#FFFFFF;
+}
+
 
   .list-menu__item--link {
     text-decoration: none;
     padding-bottom: 1rem;
     padding-top: 1rem;
     line-height: calc(1 + 0.8 / var(--font-body-scale));
+  }
+  .icons-wraper{
+display:flex;}
+  
+  .trial-experience{
+       margin-left: 51px;
+      border-radius:28px;
+      background-color:#8CC63F;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 24px;
+      border:none;
+      padding:12px;
+    color:#FFFFFF;
+  }
+  @media screen and  (max-width:1090px){
+      .trial-experience{
+        display:none;
+      }
   }
 
   @media screen and (min-width: 750px) {
@@ -70,6 +108,23 @@
       padding-top: 0.5rem;
     }
   }
+  .test{
+       margin-left: 51px;
+      border-radius:28px;
+      background-color:#8CC63F;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 24px;
+      border:none;
+      padding:12px;
+    color:#FFFFFF;}
+    @media screen and  (max-width:1090px){
+      .test{
+        display:none;
+      }
+  }
+
+  
 </style>
 
 {%- style -%}
@@ -200,8 +255,9 @@
       {%- endif -%}
     {%- endif -%}
 
-    <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
-      <div class="desktop-localization-wrapper">
+    <!-- <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
+     <div class="icons-wraper">
+            <div class="desktop-localization-wrapper">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
           <localization-form class="small-hide medium-hide" data-prevent-hide>
             {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
@@ -224,9 +280,8 @@
           </localization-form>
         {%- endif -%}
       </div>
-      {% render 'header-search', input_id: 'Search-In-Modal' %}
-
-      {%- if shop.customer_accounts_enabled -%}
+        {% render 'header-search', input_id: 'Search-In-Modal' %}
+        {%- if shop.customer_accounts_enabled -%}
         <a
           href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
           class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}"
@@ -254,8 +309,7 @@
           </span>
         </a>
       {%- endif -%}
-
-      {%- for block in section.blocks -%}
+         {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
             {% render block %}
@@ -277,8 +331,75 @@
             <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
           </div>
         {%- endif -%}
+      </a>  
+     </div>
+      {% if customer %}
+  {% if customer.tags contains 'pro' or customer.tags contains 'mode' %}
+    <img src="{{ customer.avatar_url }}" alt="Customer Avatar" class="avatar">
+  {% else %}
+    <button class="trial-button">Experience 30 Days Free</button>
+  {% endif %}
+{% else %}
+  <button class="trial-button">Experience 30 Days Free</button>
+{% endif %}
+    </div> -->
+
+    <!-- testting the header -->
+   <div class="header__icons">
+  <!-- Search Icon -->
+  {% render 'header-search', input_id: 'Search-In-Modal' %}
+
+  <!-- Conditional Content Based on User Role -->
+  {% if customer %}
+    {% if customer.tags contains 'pro' or customer.tags contains 'mode' %}
+      <!-- Pro/Mode View: Show Only Search Icon and Logo -->
+
+        {% if shop.customer_accounts_enabled %}
+      <a href="{{ routes.account_login_url }}" class="header__icon header__icon--account link focus-inset">
+         <img src="{{ 'login.png' | asset_url }}" alt="Client Logo" class="logo" width="50px" height="50px">
       </a>
-    </div>
+    {% endif %}
+
+
+    {% else %}
+      <!-- Logged-in but not Pro/Mode: Show 3 Icons, Button, Login, and Cart -->
+    {% if shop.customer_accounts_enabled %}
+      <a href="{{ routes.account_login_url }}" class="header__icon header__icon--account link focus-inset">
+        <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+      </a>
+    {% endif %}
+
+    <!-- Cart Icon -->
+    <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
+      <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+    </a>
+      <button class="trial-button">Experience 30 Days Free</button>
+
+    
+
+  
+    {% endif %}
+  {% else %}
+    <!-- Guest View: Show 3 Icons, Button, Login, and Cart -->
+        <!-- Account Icon -->
+    {% if shop.customer_accounts_enabled %}
+      <a href="{{ routes.account_login_url }}" class="header__icon header__icon--account link focus-inset">
+        <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+      </a>
+    {% endif %}
+
+    <!-- Cart Icon -->
+    <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
+      <span class="svg-wrapper">{{ 'icon-cart.svg' | inline_asset_content }}</span>
+    </a>
+
+    <button class="trial-button test">Experience 30 Days Free</button>
+
+
+  {% endif %}
+</div>
+
+
   </header>
 </{% if section.settings.sticky_header_type != 'none' %}sticky-header{% else %}div{% endif %}>
 
