@@ -9,7 +9,7 @@
     data-zoom-on-hover
   {% endif %}
 >
-  {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'section-main-product.css' | asset_url | stylesheet_tag }}s
   {{ 'parent-template.css' | asset_url | stylesheet_tag }}
   {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
@@ -800,67 +800,7 @@
       </div>
     </div>
 
-    <!-- Referenced Products Section -->
-    {% if product.metafields.custom.bundleproduct.value %}
-      <div class="referenced-products" id="referencedProducts">
-        <!-- assign empty array liquid does not recognise the empty object -->
-
-        {% assign grouped_products = '' %}
-
-        <!-- Collect all unique product types -->
-        {% for bundle_product in product.metafields.custom.bundleproduct.value %}
-          {% assign type = bundle_product.type | default: 'Other' %}
-
-          {% unless grouped_products contains type %}
-            {% assign grouped_products = grouped_products | append: ',' | append: type %}
-          {% endunless %}
-        {% endfor %}
-
-        {% assign grouped_products = grouped_products | remove_first: ',' | split: ',' %}
-
-        <!-- Render the scroll-to-tags section dynamically -->
-        <section class="section-container">
-          <h1 class="tags-title">Included in the collection</h1>
-          <div class="scroll-to-tags">
-            {% for type in grouped_products %}
-              <p onclick="scrollToSection('{{ type | handleize }}')">
-                {{ type }}
-                <img src="{{ 'arrow-down.png' | asset_url }}" alt="array-image" width="15px" height="15px">
-              </p>
-            {% endfor %}
-          </div>
-        </section>
-
-        <!-- Display grouped bundle products -->
-        {% for type in grouped_products %}
-          <h3 id="{{ type | handleize }}">{{ type }}</h3>
-          <ul>
-            {% for bundle_product in product.metafields.custom.bundleproduct.value %}
-              {% assign productType = bundle_product.type | default: 'Other' %}
-
-              {% if productType == type %}
-                <li class="bundle-item">
-                  <a href="{{ bundle_product.url }}">
-                    {% if bundle_product.featured_image %}
-                      <img
-                        src="{{ bundle_product.featured_image.src | img_url: 'small' }}"
-                        width="400px"
-                        height="200px"
-                        alt="{{ bundle_product.title }}"
-                      >
-                    {% else %}
-                      <img src="{{ 'collection.png' | asset_url }}" alt="Default Image" width="300px" height="200px">
-                    {% endif %}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>No bundle products found.</p>
-    {% endif %}
+    {% render 'grouped-products' %}
 
     <!-- end of onclick test -->
     <!-- render js for the on click button -->
