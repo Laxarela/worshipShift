@@ -1,3 +1,6 @@
+{% comment %} adding the styling file in order to style the table {% endcomment %}
+{{ 'grouped-products.css' | asset_url | stylesheet_tag }}
+
 <div id="skuTableContainer">
   <table id="skuTable">
     <thead>
@@ -12,75 +15,54 @@
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", async function () {
+    let skuString = "{{ product.metafields.custom.list_of_sku }}"; 
 
-document.addEventListener("DOMContentLoaded", async function() {
-    // Get the SKU dynamically from the product's metafield
-    let sku = `{{ product.metafields.custom.sku | strip_newlines | strip }}`; 
+    console.log("Raw SKU String:", skuString);
 
-    console.log("Raw SKU from metafield:", sku);
-
-    if (!sku) {
-        console.log("No SKU found for this product.");
+    if (!skuString) {
+        console.log("No SKU found.");
         return;
     }
 
-    // Clean up the SKU: remove newlines, extra spaces, and trailing commas
-    let skuArray = sku
-        .replace(/\s+/g, "")  // Remove all spaces and newlines
-        .split(",")           // Split by comma
-        .map(s => s.trim())   // Trim each value
-        .filter(s => s !== ""); // Remove empty strings
+    // Remove trailing commas and split into an array
+    let skuArray = skuString.replace(/,$/, "").split(",").map(s => s.trim());
 
     console.log("Cleaned SKU List:", skuArray);
 
-    // Loop through each SKU and fetch matching products
-    for (const singleSku of skuArray) {
-        await fetchProductsBySKU(singleSku);
-    }
-});
-
-document.addEventListener("DOMContentLoaded", async function() {
-    // Get the SKU dynamically from the product's metafield
-    const sku = "{{ product.metafields.custom.list_of_sku }}"; 
-
-  console.log("hello there this is the sku", sku)
-
-    if (sku) {
+    // Fetch products for each SKU
+    for (const sku of skuArray) {
         await fetchProductsBySKU(sku);
-    } else {
-        console.log("No SKU found for this product.");
     }
 });
 
 async function fetchProductsBySKU(sku) {
     const query = `{
-  products(first: 10) {
-    edges {
-      node {
-        id
-        vendor
-        title
-        description
-        tags
-        productType
-        metafield(namespace: "custom", key: "list_of_sku") {
-          value
+      products(first: 10, query: "sku:${sku}") {
+        edges {
+          node {
+            id
+            title
+            handle
+            metafield(namespace: "custom", key: "list_of_sku") {
+              value
+            }
+          }
         }
       }
-    }
-  }
-}`;
+    }`;
 
-    const response = await fetch('{{ shop.url }}/admin/api/2024-04/graphql.json', {
-        method: 'POST',
+    const response = await fetch("https://lela-test.myshopify.com/api/2024-04/graphql.json", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': 'eb7c1d0a7f22180fe533e18032a02f48'
+            "Content-Type": "application/json",
+            "X-Shopify-Storefront-Access-Token":STORE_FRONT_API_DATA
         },
         body: JSON.stringify({ query })
     });
 
     const result = await response.json();
+    console.log("GraphQL Response:", result);
     populateTable(result.data.products.edges);
 }
 
@@ -92,7 +74,8 @@ function populateTable(products) {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${product.node.title}</td>
-            <td>${product.node.metafields[0]?.value || "N/A"}</td>
+           <td>${product.node.metafield ? product.node.metafield.value : "N/A"}</td>
+         
             <td><a href="/products/${product.node.handle}" target="_blank">View</a></td>
         `;
         tbody.appendChild(row);

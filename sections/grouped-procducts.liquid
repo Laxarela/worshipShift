@@ -800,11 +800,9 @@
       </div>
     </div>
 
-    {% render 'grouped-products' %}
-
     <!-- end of onclick test -->
     <!-- render js for the on click button -->
-    <script src="{{ 'rendered-products-collection.js' | asset_url }}" defer></script>
+    <!-- <script src="{{ 'rendered-products-collection.js' | asset_url }}" defer></script> -->
     <!-- render click button for download file -->
     <script src="{{ 'downloadButtonDate.js' | asset_url }}" defer></script>
 
@@ -856,32 +854,11 @@
       endif
     -%}
 
+    {% render 'grouped-products' %}}
+
     <script type="application/ld+json">
       {{ product | structured_data }}
     </script>
-    <!-- function to scroll into element -->
-    <script>
-      function scrollToSection(sectionId) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    </script>
-
-    {% if product.metafields.custom.bundleproduct.value %}
-      <script>
-        const bundleProducts = {{ product.metafields.custom.bundleproduct.value | json }};
-
-        bundleProducts.forEach(bundleProduct => {
-          console.log("type:", bundleProduct.type);
-        });
-
-        console.log("Bundle Product Metafield:", bundleProducts);
-      </script>
-    {% else %}
-      <p>No bundle products found.</p>
-    {% endif %}
 
     {{ 'activeButton.js' | asset_url | script_tag }}
   </div>
